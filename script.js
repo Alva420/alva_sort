@@ -1,12 +1,12 @@
-// 自定义图片配置 - 使用提供的本地图片
+// 自定义图片配置 - 图片放在images子文件夹中
 const imageItems = [
-    { name: "薄金", url: "bj.png" },
-    { name: "典狱长", url: "dyz.png" },
-    { name: "隐士", url: "hermit.png" },
-    { name: "首席顾问", url: "sxgw.png" },
-    { name: "升学礼", url: "sxl.png" },
-    { name: "乡村牧师", url: "xcms.png" },
-    { name: "游隼", url: "ys.png" }
+    { name: "薄金", url: "images/bj.png" },       
+    { name: "典狱长", url: "images/dyz.png" },    
+    { name: "隐士", url: "images/hermit.png" },   
+    { name: "首席顾问", url: "images/sxgw.png" },
+    { name: "升学礼", url: "images/sxl.png" },    
+    { name: "乡村牧师", url: "images/xcms.png" }, 
+    { name: "游隼", url: "images/ys.png" }       
 ];
 const sequenceLength = imageItems.length;
 let targetSequence = [];
@@ -68,14 +68,14 @@ function renderGuessSequence() {
         
         // 创建图片元素
         const imgEl = document.createElement('img');
-        imgEl.src = item.url;
+        imgEl.src = item.url; // 这里会自动使用images/前缀的路径
         imgEl.alt = item.name;
         imgEl.className = 'color-img';
         
         // 图片加载错误处理
         imgEl.onerror = function() {
             this.src = 'https://picsum.photos/100/100?grayscale';
-            this.alt = `无法加载: ${item.name}`;
+            this.alt = `无法加载: ${item.name} (路径: ${item.url})`; // 错误信息中显示路径，便于排查
         };
         
         itemEl.appendChild(imgEl);
@@ -178,7 +178,7 @@ function renderTargetSequence() {
         
         // 创建图片元素
         const imgEl = document.createElement('img');
-        imgEl.src = item.url;
+        imgEl.src = item.url; // 使用images/前缀的路径
         imgEl.alt = item.name;
         imgEl.className = 'color-img';
         
@@ -213,7 +213,7 @@ function addToHistory(guess, correctCount) {
         itemEl.title = item.name;
         
         const imgEl = document.createElement('img');
-        imgEl.src = item.url;
+        imgEl.src = item.url; // 使用images/前缀的路径
         imgEl.alt = item.name;
         imgEl.className = 'w-full h-full object-cover';
         
@@ -245,6 +245,21 @@ function addToHistory(guess, correctCount) {
 
 // 显示胜利弹窗
 function showWinModal() {
+    // 胜利弹窗中使用jl.png（同样放在images文件夹）
+    const winImage = document.createElement('img');
+    winImage.src = 'images/jl.png'; // 胜利图片路径
+    winImage.alt = '胜利庆祝';
+    winImage.className = 'mx-auto mb-4 rounded-lg shadow-lg max-w-full h-48 object-cover';
+    
+    // 清除弹窗中可能已有的图片，添加新图片
+    const modalImageContainer = modalContent.querySelector('.modal-image-container') || document.createElement('div');
+    modalImageContainer.className = 'modal-image-container';
+    modalImageContainer.innerHTML = '';
+    modalImageContainer.appendChild(winImage);
+    
+    // 将图片容器插入弹窗
+    modalContent.insertBefore(modalImageContainer, modalContent.firstChild);
+    
     finalAttemptsEl.textContent = guessCount;
     winModal.classList.remove('hidden');
     
@@ -275,4 +290,3 @@ modalRestartBtn.addEventListener('click', () => {
 
 // 初始化游戏
 window.addEventListener('DOMContentLoaded', initGame);
-
