@@ -1,1 +1,114 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>隐家大院排序猜测游戏</title>
+    <!-- 引入Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 引入Font Awesome -->
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <!-- 引入自定义样式 -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 font-sans text-neutral flex flex-col items-center justify-start pt-8 pb-16 px-4">
+    <!-- 游戏容器 -->
+    <div class="max-w-3xl w-full">
+        <!-- 游戏标题 -->
+        <div class="text-center mb-8">
+            <h1 class="text-[clamp(2rem,5vw,3rem)] font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary mb-2">图片排序大师</h1>
+            <p class="text-gray-600 text-lg">通过点击排序，猜出目标隐士们序列</p>
+        </div>
+        
+        <!-- 选择提示 -->
+        <div id="selected-indicator" class="hidden mb-4 bg-white/80 backdrop-blur-sm p-3 rounded-lg shadow text-center">
+            <p>已选择: <span id="selected-name" class="font-bold text-primary"></span>，请点击另一个图片进行交换</p>
+        </div>
+        
+        <!-- 游戏卡片 -->
+        <div class="game-card mb-8">
+            <!-- 游戏信息区 -->
+            <div class="flex flex-wrap justify-between items-center mb-6 gap-4">
+                <div class="flex items-center gap-3">
+                    <div class="bg-white px-4 py-2 rounded-full shadow flex items-center gap-2">
+                        <i class="fa fa-refresh text-primary"></i>
+                        <span id="attempts" class="font-bold">猜测次数: 0</span>
+                    </div>
+                    <div class="bg-white px-4 py-2 rounded-full shadow flex items-center gap-2">
+                        <i class="fa fa-check-circle text-accent"></i>
+                        <span id="correct-count" class="font-bold">正确数量: 0</span>
+                    </div>
+                </div>
+                <button id="restart-btn" class="flex items-center gap-2 bg-neutral hover:bg-neutral/90 text-white px-4 py-2 rounded-full transition-all duration-300">
+                    <i class="fa fa-gamepad"></i>
+                    <span>重新开始</span>
+                </button>
+            </div>
+            
+            <!-- 目标序列区域 (初始隐藏) -->
+            <div id="target-container" class="hidden mb-8">
+                <h2 class="text-xl font-semibold mb-3 text-center text-gray-700">目标序列</h2>
+                <div id="target-sequence" class="color-container"></div>
+            </div>
+            
+            <!-- 玩家排序区域 -->
+            <div class="mb-8">
+                <h2 class="text-xl font-semibold mb-3 text-center text-gray-700">请排序你的猜测</h2>
+                <div id="guess-container" class="color-container min-h-[100px]">
+                    <!-- 图片项将通过JS动态生成 -->
+                </div>
+            </div>
+            
+            <!-- 提交按钮 -->
+            <div class="text-center">
+                <button id="submit-btn" class="btn-primary">
+                    <i class="fa fa-paper-plane mr-2"></i>提交猜测
+                </button>
+            </div>
+        </div>
+        
+        <!-- 游戏说明 -->
+        <div class="bg-white rounded-xl shadow-md p-5 mb-8">
+            <h3 class="text-lg font-semibold mb-2 text-gray-800 flex items-center">
+                <i class="fa fa-info-circle text-primary mr-2"></i>游戏说明
+            </h3>
+            <ul class="list-disc pl-5 text-gray-600 space-y-1">
+                <li>点击第一个图片，再点击第二个图片进行交换</li>
+                <li>每次提交后，会显示你猜对位置的图片数量</li>
+                <li>目标是找出正确的隐士排列顺序</li>
+                <li>尝试用最少的次数完成挑战！</li>
+            </ul>
+        </div>
+        
+        <!-- 历史记录 -->
+        <div class="bg-white rounded-xl shadow-md p-5">
+            <h3 class="text-lg font-semibold mb-3 text-gray-800 flex items-center">
+                <i class="fa fa-history text-primary mr-2"></i>猜测历史
+            </h3>
+            <div id="history-container" class="space-y-3 max-h-60 overflow-y-auto pr-2">
+                <p class="text-gray-500 text-center italic">暂无历史记录</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 胜利弹窗 -->
+    <div id="win-modal" class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full mx-4 transform transition-all duration-500 scale-95 opacity-0" id="modal-content">
+            <div class="text-center">
+                <div class="mb-4">
+                    <img src="jl.png" alt="胜利庆祝图片" class="w-32 h-32 mx-auto rounded-full object-cover">
+                </div>
+                <h2 class="text-2xl font-bold text-gray-800 mb-2">恭喜你赢了！</h2>
+                <p class="text-gray-600 mb-6">你用了 <span id="final-attempts" class="font-bold text-primary">0</span> 次猜出了正确序列</p>
+                <button id="modal-restart" class="btn-primary w-full">
+                    <i class="fa fa-refresh mr-2"></i>再玩一次
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 引入游戏脚本 -->
+    <script src="script.js"></script>
+</body>
+</html>
 
