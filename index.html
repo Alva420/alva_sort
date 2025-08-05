@@ -8,21 +8,67 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- 引入Font Awesome -->
     <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
-    <!-- 引入自定义样式 -->
-    <link rel="stylesheet" href="styles.css">
+    
+    <!-- 配置Tailwind自定义颜色和字体 - 确保此配置正确加载 -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#6366f1',
+                        secondary: '#8b5cf6',
+                        accent: '#ec4899',
+                        neutral: '#1f2937',
+                        'neutral-light': '#f3f4f6',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    
+    <!-- 自定义工具类 - 确保这些样式被正确应用 -->
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .color-item {
+                @apply w-14 h-14 md:w-16 md:h-16 rounded-full flex items-center justify-center text-2xl md:text-3xl cursor-pointer transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-105;
+            }
+            .color-item.selected {
+                @apply ring-4 ring-accent scale-110;
+            }
+            .color-img {
+                @apply w-full h-full object-cover rounded-full;
+            }
+            .color-container {
+                @apply flex gap-2 md:gap-3 flex-wrap justify-center p-4 bg-white/50 backdrop-blur-sm rounded-xl shadow-lg;
+            }
+            .btn-primary {
+                @apply bg-primary hover:bg-primary/90 text-white font-bold py-3 px-6 rounded-full transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-primary/50;
+            }
+            .game-card {
+                @apply bg-gradient-to-br from-indigo-50 to-purple-50 rounded-2xl shadow-xl p-6 md:p-8 transition-all duration-500 hover:shadow-2xl;
+            }
+        }
+    </style>
 </head>
 <body class="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 font-sans text-neutral flex flex-col items-center justify-start pt-8 pb-16 px-4">
+    <!-- 选中提示 -->
+    <div id="selected-indicator" class="hidden fixed top-4 left-1/2 transform -translate-x-1/2 bg-accent text-white px-4 py-2 rounded-full shadow-lg z-40">
+        <span>已选中: </span>
+        <span id="selected-name" class="font-bold"></span>
+    </div>
+
     <!-- 游戏容器 -->
     <div class="max-w-3xl w-full">
         <!-- 游戏标题 -->
         <div class="text-center mb-8">
             <h1 class="text-[clamp(2rem,5vw,3rem)] font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary mb-2">图片排序大师</h1>
-            <p class="text-gray-600 text-lg">通过点击排序，猜出目标隐士们序列</p>
-        </div>
-        
-        <!-- 选择提示 -->
-        <div id="selected-indicator" class="hidden mb-4 bg-white/80 backdrop-blur-sm p-3 rounded-lg shadow text-center">
-            <p>已选择: <span id="selected-name" class="font-bold text-primary"></span>，请点击另一个图片进行交换</p>
+            <p class="text-gray-600 text-lg">通过点击交换，猜出目标图片序列</p>
         </div>
         
         <!-- 游戏卡片 -->
@@ -73,10 +119,12 @@
                 <i class="fa fa-info-circle text-primary mr-2"></i>游戏说明
             </h3>
             <ul class="list-disc pl-5 text-gray-600 space-y-1">
-                <li>点击第一个图片，再点击第二个图片进行交换</li>
+              <li>图片资源来源于网易第五人格，本程序仅供娱乐不做商用</li>
+                <li>点击第一张图片，再点击第二张图片进行交换</li>
                 <li>每次提交后，会显示你猜对位置的图片数量</li>
-                <li>目标是找出正确的隐士排列顺序</li>
+                <li>目标是找出正确的图片排列顺序</li>
                 <li>尝试用最少的次数完成挑战！</li>
+                
             </ul>
         </div>
         
@@ -95,9 +143,7 @@
     <div id="win-modal" class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 hidden">
         <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full mx-4 transform transition-all duration-500 scale-95 opacity-0" id="modal-content">
             <div class="text-center">
-                <div class="mb-4">
-                    <img src="jl.png" alt="胜利庆祝图片" class="w-32 h-32 mx-auto rounded-full object-cover">
-                </div>
+                <div class="text-5xl mb-4">🎉</div>
                 <h2 class="text-2xl font-bold text-gray-800 mb-2">恭喜你赢了！</h2>
                 <p class="text-gray-600 mb-6">你用了 <span id="final-attempts" class="font-bold text-primary">0</span> 次猜出了正确序列</p>
                 <button id="modal-restart" class="btn-primary w-full">
@@ -111,4 +157,4 @@
     <script src="script.js"></script>
 </body>
 </html>
-
+    
